@@ -190,44 +190,6 @@ def create_gibbs_state(solutions_dict: dict, t: int = 1) -> np.array:
     return psi_state_norm
 
 
-def create_analitical_psgibbs_state(solutions_gibbs: dict, t: int, alpha) -> np.array:
-    """_summary_
-
-    Args:
-        solutions_gibbs_dict (dict): _description_
-        t (int): _description_
-        alpha (float): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    solutions_gibbs_dict = solutions_gibbs.copy()
-
-    psi_psstate = 0
-
-    e_min = min(solutions_gibbs_dict.values())
-    n = len(solutions_gibbs_dict)
-    m = sum(1 for value in solutions_gibbs_dict.values() if value == e_min)
-
-    for state, energy in solutions_gibbs_dict.items():
-
-        if energy != e_min and energy != 0:
-
-            psi_psstate += np.sqrt(
-                np.exp(-2 * energy / t) + (m * alpha * e_min) / ((n - m - 1) * energy)
-            ) * create_state(state)
-
-        elif energy == e_min and energy != 0:
-
-            psi_psstate += np.sqrt(np.exp(-2 * energy / t) - alpha) * create_state(
-                state
-            )
-
-    psi_state_norm = psi_psstate / np.linalg.norm(psi_psstate)
-
-    return psi_state_norm
-
-
 def create_gausgibbs_state(
     solutions_dict: dict, delta_energy: float, mu_energy: float
 ) -> np.array:
