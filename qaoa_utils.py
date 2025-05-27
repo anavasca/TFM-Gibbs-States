@@ -90,8 +90,13 @@ def brute_force_advance(matrix):
         
         cut_value = -sum(matrix[i][j] for i in subset for j in complement)
         
-        if type(subset)==set():
-            cut_list['0'*n_nodes] = float(cut_value)
+        # subset == set() would check if the subset is empty. The previous
+        # comparison used ``type(subset) == set()`` which is always ``False``
+        # because ``set()`` creates an empty set instead of the ``set`` class.
+        # This prevented the branch for the empty subset from ever running
+        # explicitly.  Use ``not subset`` to detect the empty subset correctly.
+        if not subset:
+            cut_list['0' * n_nodes] = float(cut_value)
         
         else: 
             
